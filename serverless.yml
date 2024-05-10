@@ -1,0 +1,70 @@
+
+
+service: indra
+
+plugins:
+  - serverless-offline
+  - serverless-openapi-documentation
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+functions:
+  documentation:
+    handler: src/documentation/handler.handler
+    events:
+      - http:
+          method: GET
+          path: /documentation
+          cors: true
+
+  getAllModel:
+    handler: src/translator_model/handler.getAllModel
+    events:
+      - http:
+          method: GET
+          path: /traductor/{model}
+          cors: true
+          request:
+            parameters:
+              paths:
+                model: true
+      
+  getDetailModel:
+    handler: src/translator_model/handler.getDetailModel
+    events:
+      - http:
+          method: GET
+          path: /traductor/{model}/{id}
+          cors: true
+          request:
+            parameters:
+              paths:
+                model: true
+                id: true
+
+  getPeople:
+    handler: src/people/handler.findAllPeople
+    events:
+      - http:
+          method: GET
+          path: /people
+          cors: true
+  
+  createPeople:
+    handler: src/people/handler.createPeople
+    events:
+      - http:
+          method: POST
+          path: /people
+          cors: true
+custom:
+  documentation:
+    version: '1'
+    title: 'My API'
+    description: 'This is my API'
+    models: {}
